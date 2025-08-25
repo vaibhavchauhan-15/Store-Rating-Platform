@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: store-rating-platform-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DB_NAME
+        fromDatabase:
+          name: store-rating-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: store-rating-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: store-rating-db
+          property: password
+      - key: DB_HOST
+        fromDatabase:
+          name: store-rating-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: store-rating-db
+          property: port
+      - key: JWT_SECRET
+        sync: false
+
+databases:
+  - name: store-rating-db
+    databaseName: store_ratings_db
+    plan: free
+    ipAllowList: []
