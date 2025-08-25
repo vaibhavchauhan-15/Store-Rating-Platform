@@ -58,14 +58,39 @@ app.use('/api/users', require('./routes/users.routes'));
 app.use('/api/stores', require('./routes/stores.routes'));
 app.use('/api/ratings', require('./routes/ratings.routes'));
 
+// API status route for health checks
+app.get('/api/status', (req, res) => {
+  res.json({ status: 'ok', message: 'API is running' });
+});
+
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
-  // Set static folder
-  app.use(express.static(path.join(__dirname, '../client/build')));
+  try {
+    // Check if client/build exists
+    if (require('fs').existsSync(path.join(__dirname, '../client/build'))) {
+      // Set static folder
+      app.use(express.static(path.join(__dirname, '../client/build')));
 
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../', 'client', 'build', 'index.html'));
-  });
+      app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, '../', 'client', 'build', 'index.html'));
+      });
+    } else {
+      // If client/build doesn't exist, just serve API endpoints
+      app.get('/', (req, res) => {
+        res.json({ 
+          message: 'Store Rating Platform API',
+          endpoints: [
+            '/api/auth', 
+            '/api/users', 
+            '/api/stores', 
+            '/api/ratings'
+          ]
+        });
+      });
+    }
+  } catch (error) {
+    console.error('Error setting up static files:', error);
+  }
 } else {
   // Serve static files in development mode too
   app.use(express.static(path.join(__dirname, '../client/public')));

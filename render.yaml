@@ -9,26 +9,10 @@ services:
         value: production
       - key: PORT
         value: 10000
-      - key: DB_NAME
+      - key: DATABASE_URL
         fromDatabase:
           name: store-rating-db
-          property: database
-      - key: DB_USER
-        fromDatabase:
-          name: store-rating-db
-          property: user
-      - key: DB_PASSWORD
-        fromDatabase:
-          name: store-rating-db
-          property: password
-      - key: DB_HOST
-        fromDatabase:
-          name: store-rating-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: store-rating-db
-          property: port
+          property: connectionString
       - key: JWT_SECRET
         sync: false
 
